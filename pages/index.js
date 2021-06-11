@@ -1,6 +1,6 @@
 import Head from 'next/head'
 import { useForm } from 'react-hook-form'
-import React from "react";
+import React, {useEffect} from "react";
 import axios from 'axios';
 import { useRouter } from 'next/router'
 import Router, { route } from 'next/dist/next-server/server/router';
@@ -12,20 +12,75 @@ export default function Home() {
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
 
   const router = useRouter();
+     
+  useEffect(() => {
+        
+    readNames();
 
-
+  });
  
       toast.configure()
       const success = router.query["success"];
       if (success==="1"){
-        toast("Ausgabe wurde erfolgreich protokolliert! :)");
-        console.log("amk");
+        toast("Ausgabe wurde erfolgreich protokolliert! :)",{ autoClose: 2000 });
+        
 
-
+      } else{
+       
       };
    
+      
 
-   
+  async function readNames (){
+
+    try {
+      fetch("https://sheet.best/api/sheets/bd0219c5-5d55-42a0-9a0e-fa7ac9bea998/tabs/Namen")
+    .then((response) => response.json())
+    .then((data) => {
+
+      
+      var options = [];
+      for (let index = 0; index < data.length; index++) {
+      const element = data[index]["Namen"];
+      options.push(element);
+      }
+
+      var dropdown =  document.querySelector('#nameDropdown');
+
+
+      var length = dropdown.options.length;
+      if(length>0){
+
+        for (let index = length; index >= 0; index--) {
+          dropdown.options[index] = null;
+        }
+       
+      }
+
+      for (let index = 0; index < options.length; index++) {
+        var opt = document.createElement("option");
+        opt.value= index;
+        opt.innerHTML = options[index]; // whatever property it has
+        
+        // then append it to the select element
+        dropdown.appendChild(opt);
+        dropdown.selectedIndex = "0"; 
+      }
+
+      
+    })
+    .catch((error) => {
+      alert("Screenshotte bitte und schick es Sahra. " +error)
+    });
+    
+
+      
+    } catch (error) {
+      
+    }
+    
+    
+  }
 
   async function onSubmitForm(values) {
     var today = new Date();
@@ -34,9 +89,14 @@ export default function Home() {
     var yyyy = today.getFullYear();
 
     today = mm + '/' + dd + '/' + yyyy;
-    values["date"] = today;
-  
-    fetch("https://sheet.best/api/sheets/bd0219c5-5d55-42a0-9a0e-fa7ac9bea998", {
+    values["datum"] = today;
+    var e = document.querySelector("#nameDropdown");
+    var idx = e.value;
+    values["name"] = e.options[e.selectedIndex].text;
+    console.log(values["name"]);
+    var res;
+  const url = "https://sheet.best/api/sheets/bd0219c5-5d55-42a0-9a0e-fa7ac9bea998/tabs/"+values["name"];
+    fetch(url, {
         method: "POST",
         mode: "cors",
         headers: {
@@ -47,34 +107,20 @@ export default function Home() {
         .then((r) => r.json())
         .then((values) => {
           // The response comes here
-          console.log(values);
           window.location.href = window.location.pathname + '?success=1';
-        //   router.reload(window.location.pathname).then() => { 
+        //    router.reload(window.location.pathname).then() => { 
           
           
-        // })
+        //  })
         })
         .catch((error) => {
           // Errors are reported there
-          console.log(error);
+          alert("Screenshotte bitte und schick es Sahra. " +error)
         });
-      // let config = {
-      //   method: 'post',
-      //   url: "https://sheet.best/api/sheets/1cf0d28e-720b-4788-9cbd-df31ced16847",
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },rm -rf .git*
-      //   data: values,
-      // };
 
-      // try {
-      //   const response = await axios(config);
-      //   console.log(response);
+        
 
-      // }
-      // catch(err){
-      //   console.log(err);
-      // }
+        
   }
   return (
     <div className='py-16 px-4 w-screen h-screen flex bg-gray-400'>
@@ -85,21 +131,21 @@ export default function Home() {
           <label  htmlFor="name" className="sr-only">
             Name
           </label>
-          <input type="text" name="name" {...register("name", { required: true })}
-            className="block w-full shadow py-3 px-4 placeholder-gray-500 bg-gray-200 focus:ring-blue-500 focus:border-blue-500 border-gray-300
-            rounded-md focus:outline-none focus:ring-2" placeholder="Name"/>
-            {errors.name && <span  className="text-red-600">Bitte gib deinen Namen ein!</span>}
+          <select id="nameDropdown" name="name" type="text" {...register("name", { required: false })} className="block bg-gray-100 mt-5 w-full py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
+          {errors.beschreibung && <span className="text-red-600" >Bitte wähl einen Namen aus!</span>}
+          </select>
+            {errors.name && <span  className="text-red-600">Bitte wähle einen Namen ein!</span>}
         </div>
         <div>
           <label htmlFor="bezeichnung" className="sr-only">
             Bezeichnung
           </label>
-          <input name="beschreibung" type="text" {...register("beschreibung", { required: true })}className="block w-full shadow py-3 bg-gray-200 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
+          <input name="beschreibung" type="text" {...register("beschreibung", { required: false })}className="block w-full shadow py-3 bg-gray-100 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
             rounded-md focus:outline-none focus:ring-2" placeholder="Beschreibung"/>
              {errors.beschreibung && <span className="text-red-600" >Bitte gib eine Beschreibung deiner Ausgabe ein!</span>}
         </div>
         <div>
-          <select name="kategorie" type="text" {...register("kategorie", { required: true })} className="block w-full py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
+          <select name="kategorie" type="text" {...register("kategorie", { required: true })} className="block w-full py-3 px-4 bg-gray-100 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500  border-gray-100  rounded-md focus:outline-none focus:ring-2 shadow">
             <option value="An & Rückreise">An-& Rückreise</option>
             <option value="Verkehrsmittel">Verkehrsmittel vor Ort</option>
             <option value="Unterkunft">Unterkunft</option>
@@ -111,20 +157,29 @@ export default function Home() {
           </select>
           {errors.kategorie && <span className="text-red-600">Bitte wähle eine kategorie aus!</span>}
         </div>
+  
         <div className="md:flex">
         <label htmlFor="bezeichnung" className="sr-only">
             Bezeichnung
           </label>
-          <input name="money" type="number"  {...register("money", { required: true, min: 0.10 })}  className="block w-50 shadow py-3 px-4 bg-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
+          <input name="kosten" type="number"  {...register("kosten", { required: true, min: 0.10 })}  className="block w-50  bg-gray-100 shadow py-3 px-4  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
             rounded-md focus:outline-none focus:ring-2" placeholder="0.00" min="0.00" step="0.01"/> 
-            <select name="currency" {...register("currency")}  className="block w-full py-3 px-4 md:ml-6 mt-5 md:mt-0 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
+            <select name="currency" {...register("currency")}  className="block w-full py-3 px-4 md:ml-6 mt-5 md:mt-0 placeholder-gray-500 bg-gray-100 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
             <option value="Euro">Euro €</option>
             <option value="Dollar">Dollar $</option>
             <option value="Kuna">Kuna kn</option>
           </select>
           {errors.money && <span className="text-red-600">Mindesbetrag ist 0.10!</span>}
         </div>
-          
+        <div> 
+        <input {...register("zahlungsmethode", { required: true })} type="radio" value="Bargeld" />
+       
+        <label className="mx-2">Bargeld </label>
+        <input {...register("zahlungsmethode", { required: true })} type="radio" value="Kartenzahlung" />
+        <label className="mx-2">Kartenzahlung</label>
+        {errors.zahlungsmethode && <span className="text-red-600" ><br/>Bitte wähl eine zahlungsmethode aus!</span>}
+
+        </div>
         <div>
           <button type="submit" className="inline-flex justify-center py-3 px-6 border border-transparent shadow text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             Speichern
