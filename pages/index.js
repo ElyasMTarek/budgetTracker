@@ -165,9 +165,9 @@ export default function Home() {
           <input name="kosten" type="number"  {...register("kosten", { required: true, min: 0.10 })}  className="block w-50  bg-gray-100 shadow py-3 px-4  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
             rounded-md focus:outline-none focus:ring-2" placeholder="0.00" min="0.00" step="0.01"/> 
             <select name="waehrung" {...register("waehrung")}  className="block w-full py-3 px-4 md:ml-6 mt-5 md:mt-0 placeholder-gray-500 bg-gray-100 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
-            <option value="Euro">Euro €</option>
-            <option value="Dollar">Dollar $</option>
-            <option value="Kuna">Kuna kn</option>
+            <option {...register("waehrung")}  value="Euro">Euro €</option>
+            <option {...register("waehrung")} value="Dollar">Dollar $</option>
+            <option {...register("waehrung")} value="Kuna">Kuna kn</option>
           </select>
           {errors.money && <span className="text-red-600">Mindesbetrag ist 0.10!</span>}
         </div>
