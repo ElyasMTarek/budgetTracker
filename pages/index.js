@@ -86,7 +86,7 @@ export default function Home() {
             Name
           </label>
           <input type="text" name="name" {...register("name", { required: true })}
-            className="block w-full shadow py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
+            className="block w-full shadow py-3 px-4 placeholder-gray-500 bg-gray-200 focus:ring-blue-500 focus:border-blue-500 border-gray-300
             rounded-md focus:outline-none focus:ring-2" placeholder="Name"/>
             {errors.name && <span  className="text-red-600">Bitte gib deinen Namen ein!</span>}
         </div>
@@ -94,7 +94,7 @@ export default function Home() {
           <label htmlFor="bezeichnung" className="sr-only">
             Bezeichnung
           </label>
-          <input name="beschreibung" type="text" {...register("beschreibung", { required: true })}className="block w-full shadow py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
+          <input name="beschreibung" type="text" {...register("beschreibung", { required: true })}className="block w-full shadow py-3 bg-gray-200 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
             rounded-md focus:outline-none focus:ring-2" placeholder="Beschreibung"/>
              {errors.beschreibung && <span className="text-red-600" >Bitte gib eine Beschreibung deiner Ausgabe ein!</span>}
         </div>
@@ -115,7 +115,7 @@ export default function Home() {
         <label htmlFor="bezeichnung" className="sr-only">
             Bezeichnung
           </label>
-          <input name="money" type="number"  {...register("money", { required: true, min: 0.10 })}  className="block w-50 shadow py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
+          <input name="money" type="number"  {...register("money", { required: true, min: 0.10 })}  className="block w-50 shadow py-3 px-4 bg-gray-200 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
             rounded-md focus:outline-none focus:ring-2" placeholder="0.00" min="0.00" step="0.01"/> 
             <select name="currency" {...register("currency")}  className="block w-full py-3 px-4 md:ml-6 mt-5 md:mt-0 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
             <option value="Euro">Euro €</option>
