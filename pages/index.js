@@ -94,6 +94,12 @@ export default function Home() {
     var idx = e.value;
     values["name"] = e.options[e.selectedIndex].text;
     console.log(values["name"]);
+
+    var x = document.querySelector("#waehrungDropdown");
+    var idc = x.value;
+    values["waehrung"]= x.options[x.selectedIndex].text;
+    console.log(values["waehrung"]);
+
     var res;
   const url = "https://sheet.best/api/sheets/bd0219c5-5d55-42a0-9a0e-fa7ac9bea998/tabs/"+values["name"];
     fetch(url, {
@@ -164,12 +170,12 @@ export default function Home() {
           </label>
           <input name="kosten" type="number"  {...register("kosten", { required: true, min: 0.10 })}  className="block w-50  bg-gray-100 shadow py-3 px-4  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
             rounded-md focus:outline-none focus:ring-2" placeholder="0.00" min="0.00" step="0.01"/> 
-            <select name="waehrung" {...register("waehrung")}  className="block w-full py-3 px-4 md:ml-6 mt-5 md:mt-0 placeholder-gray-500 bg-gray-100 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
-            <option {...register("waehrung")}  value="Euro">Euro €</option>
-            <option {...register("waehrung")} value="Dollar">Dollar $</option>
-            <option {...register("waehrung")} value="Kuna">Kuna kn</option>
+            <select id="waehrungDropdown" name="waehrung" {...register("waehrung")}  className="block w-full py-3 px-4 md:ml-6 mt-5 md:mt-0 placeholder-gray-500 bg-gray-100 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
+            <option value="Euro" >Euro €</option>
+            <option  value="Dollar">Dollar $</option>
+            <option  value="Kuna">Kuna kn</option>
           </select>
-          {errors.money && <span className="text-red-600">Mindesbetrag ist 0.10!</span>}
+          {errors.kosten && <span className="text-red-600">Mindesbetrag ist 0.10!</span>}
         </div>
         <div> 
         <input {...register("zahlungsmethode", { required: true })} type="radio" className="h-5" value="Bargeld" />
@@ -177,6 +183,14 @@ export default function Home() {
         <label className="mx-2">Bargeld </label>
         <input className="ml-5"{...register("zahlungsmethode", { required: true })} type="radio" value="Kartenzahlung" />
         <label className="mx-2">Kartenzahlung</label>
+        {errors.zahlungsmethode && <span className="text-red-600" ><br/>Bitte wähl eine zahlungsmethode aus!</span>}
+
+        </div>
+        <div> 
+        <input {...register("mitbezahlt", { required: true })} type="radio" className="h-5" value="true" />
+        <label className="mx-2">Für Andere mitbezahlt </label>
+        <input className="ml-5"{...register("mitbezahlt", { required: true })} type="radio" value="false" />
+        <label className="mx-2">Für mich alleine bezahlt</label>
         {errors.zahlungsmethode && <span className="text-red-600" ><br/>Bitte wähl eine zahlungsmethode aus!</span>}
 
         </div>
