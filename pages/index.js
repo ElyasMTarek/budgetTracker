@@ -187,10 +187,10 @@ export default function Home() {
 
         </div>
         <div> 
-        <input {...register("mitbezahlt", { required: true })} type="radio" className="h-5" value="true" />
-        <label className="mx-2">Für Andere mitbezahlt </label>
         <input className="ml-5"{...register("mitbezahlt", { required: true })} type="radio" value="false" />
         <label className="mx-2">Für mich alleine bezahlt</label>
+        <input {...register("mitbezahlt", { required: true })} type="radio" className="h-5" value="true" />
+        <label className="mx-2">Für Andere mitbezahlt </label>
         {errors.zahlungsmethode && <span className="text-red-600" ><br/>Bitte wähl eine zahlungsmethode aus!</span>}
 
         </div>
