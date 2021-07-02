@@ -23,13 +23,25 @@ export default function Home() {
       const success = router.query["success"];
       if (success==="1"){
         toast("Ausgabe wurde erfolgreich protokolliert! :)",{ autoClose: 2000 });
-        
 
       } else{
        
       };
    
       
+
+      function nameIsSelected () {
+
+        var e = document.getElementById('#nameDropdown');
+        var strUser = e.value;
+
+        if(strUser ==  "--Bitte wähle einen Namen aus--" ){
+          return true;
+        }
+        else {
+          return false;
+        }
+      };
 
   async function readNames (){
 
@@ -56,8 +68,16 @@ export default function Home() {
         }
        
       }
+      var opt = document.createElement("option");
+      opt.value= 0;
+      opt.innerHTML = "--Bitte wähle einen Namen aus--"; // whatever property it has
+      
+      // then append it to the select element
+      dropdown.appendChild(opt);
+      dropdown.selectedIndex = "0"; 
 
-      for (let index = 0; index < options.length; index++) {
+      
+      for (let index = 1; index < options.length; index++) {
         var opt = document.createElement("option");
         opt.value= index;
         opt.innerHTML = options[index]; // whatever property it has
@@ -92,6 +112,10 @@ export default function Home() {
     values["datum"] = today;
     var e = document.querySelector("#nameDropdown");
     var idx = e.value;
+    if( e.options[e.selectedIndex].text === "--Bitte wähle einen Namen aus--"){
+      alert("Bitte wähle einen Namen aus!")
+    }
+    else{
     values["name"] = e.options[e.selectedIndex].text;
     console.log(values["name"]);
 
@@ -121,12 +145,9 @@ export default function Home() {
         })
         .catch((error) => {
           // Errors are reported there
-          alert("Screenshotte bitte und schick es Sahra. " +error)
+        
         });
-
-        
-
-        
+      }
   }
   return (
     <div className='py-16 px-4 w-screen h-screen flex bg-gray-400'>
@@ -134,13 +155,12 @@ export default function Home() {
         <label className="font-bold text-xl mb-20">Neue Ausgabe</label>
       <form onSubmit={handleSubmit(onSubmitForm)} className='grid grid-cols-1 gap-y-6' >
         <div>
-          <label  htmlFor="name" className="sr-only">
+          <label  htmlFor="nameDropdown" className="sr-only">
             Name
           </label>
-          <select id="nameDropdown" name="name" type="text" {...register("name", { required: false })} className="block bg-gray-100 mt-5 w-full py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
-          {errors.beschreibung && <span className="text-red-600" >Bitte wähl einen Namen aus!</span>}
+          <select id="nameDropdown" name="name" type="text" {...register("nameDropdown", { validate:  (value) => value != "SYLVIA"})} className="block bg-gray-100 mt-5 w-full py-3 px-4 placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
+          {errors.nameDropdown && errors.nameDropdown.type === "validate" &&  <span className="text-red-600" >Bitte wähl einen Namen aus!</span>}
           </select>
-            {errors.name && <span  className="text-red-600">Bitte wähle einen Namen ein!</span>}
         </div>
         <div>
           <label htmlFor="bezeichnung" className="sr-only">
@@ -179,21 +199,11 @@ export default function Home() {
         </div>
         <div> 
         <input {...register("zahlungsmethode", { required: true })} type="radio" className="h-5" value="Bargeld" />
-       
         <label className="mx-2">Bargeld </label>
         <input className="ml-5"{...register("zahlungsmethode", { required: true })} type="radio" value="Kartenzahlung" />
         <label className="mx-2">Kartenzahlung</label>
-        {errors.zahlungsmethode && <span className="text-red-600" ><br/>Bitte wähl eine zahlungsmethode aus!</span>}
-
-        </div>
-        <div> 
-        <input className="ml-5"{...register("mitbezahlt", { required: true })} type="radio" value="false" />
-        <label className="mx-2">Für mich alleine bezahlt</label>
-        <input {...register("mitbezahlt", { required: true })} type="radio" className="h-5" value="true" />
-        <label className="mx-2">Für Andere mitbezahlt </label>
-        {errors.zahlungsmethode && <span className="text-red-600" ><br/>Bitte wähl eine zahlungsmethode aus!</span>}
-
-        </div>
+        {errors.zahlungsmethode && <span className="text-red-600" ><br/>Bitte wähl eine zahlungsmethode aus!</span>}</div>
+       
         <div>
           <button type="submit" className="inline-flex justify-center py-3 px-6 border border-transparent shadow text-base font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500">
             Speichern
