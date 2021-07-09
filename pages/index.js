@@ -28,7 +28,6 @@ export default function Home() {
        
       };
    
-      
 
       function nameIsSelected () {
 
@@ -194,6 +193,8 @@ export default function Home() {
             <option value="Euro" >Euro €</option>
             <option  value="Dollar">Dollar $</option>
             <option  value="Kuna">Kuna kn</option>
+            <option  value="Kolumbianischer Peso">Kolumbianischer Peso</option>
+            <option  value="Mexikanischer Peso">Mexikanischer Peso</option>
           </select>
           {errors.kosten && <span className="text-red-600">Mindesbetrag ist 0.10!</span>}
         </div>
