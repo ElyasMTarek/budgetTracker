@@ -7,6 +7,7 @@ import Router, { route } from 'next/dist/next-server/server/router';
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 export default function Home() {
 
   const { register, handleSubmit, watch, formState: { errors } } = useForm();
@@ -123,6 +124,11 @@ export default function Home() {
     values["waehrung"]= x.options[x.selectedIndex].text;
     console.log(values["waehrung"]);
 
+    
+    
+    values["kosten"] = values["kosten"].toString().replace('.',',');
+    
+
     var res;
   const url = "https://sheet.best/api/sheets/bd0219c5-5d55-42a0-9a0e-fa7ac9bea998/tabs/"+values["name"];
     fetch(url, {
@@ -188,7 +194,7 @@ export default function Home() {
             Bezeichnung
           </label>
           <input name="kosten" type="number"  {...register("kosten", { required: true, min: 0.10 })}  className="block w-50  bg-gray-100 shadow py-3 px-4  placeholder-gray-500 focus:ring-blue-500 focus:border-blue-500 border-gray-300
-            rounded-md focus:outline-none focus:ring-2" placeholder="0.00" min="0.00" step="0.01"/> 
+            rounded-md focus:outline-none focus:ring-2" placeholder="0,00" min="0.00" step="0.01"/> 
             <select id="waehrungDropdown" name="waehrung" {...register("waehrung")}  className="block w-full py-3 px-4 md:ml-6 mt-5 md:mt-0 placeholder-gray-500 bg-gray-100 focus:ring-blue-500 focus:border-blue-500  border-gray-300  rounded-md focus:outline-none focus:ring-2 shadow">
             <option value="Euro" >Euro €</option>
             <option  value="Dollar">Dollar $</option>
@@ -196,7 +202,7 @@ export default function Home() {
             <option  value="Kolumbianischer Peso">Kolumbianischer Peso</option>
             <option  value="Mexikanischer Peso">Mexikanischer Peso</option>
           </select>
-          {errors.kosten && <span className="text-red-600">Mindesbetrag ist 0.10!</span>}
+          {errors.kosten && <span className="text-red-600">Mindesbetrag ist 0,10!</span>}
         </div>
         <div> 
         <input {...register("zahlungsmethode", { required: true })} type="radio" className="h-5" value="Bargeld" />
