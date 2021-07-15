@@ -114,6 +114,7 @@ export default function Home() {
     var idx = e.value;
     if( e.options[e.selectedIndex].text === "--Bitte wähle einen Namen aus--"){
       alert("Bitte wähle einen Namen aus!")
+      return;
     }
     else{
     values["name"] = e.options[e.selectedIndex].text;
